@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+myvenv
+
+adult.csv
+
 # C extensions
 *.so
 
