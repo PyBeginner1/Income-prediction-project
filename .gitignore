@@ -7,6 +7,9 @@ myvenv
 
 adult.csv
 
+Project/Income/Scripts
+Project/Income/pyvenv.cfg
+
 # C extensions
 *.so
 
