@@ -4,7 +4,8 @@ training_pipeline_config:
 
 
 data_ingestion_config:
-  dataset_download_url: https://www.kaggle.com/datasets/overload10/adult-census-dataset/download?datasetVersionNumber=1
+  dataset_download_url: https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data
+  download_data_dir : download_data
   raw_data_dir: raw_data
   ingested_dir: ingested_data
   ingested_train_dir: train

@@ -2,8 +2,9 @@ import logging
 from datetime import datetime
 from income.constant import get_current_time_stamp
 import os
+import pandas as pd
 
-LOG_DIR = 'housing_logs'
+LOG_DIR = 'income_logs'
 CURRENT_TIMESTAMP = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
 
 def get_log_file_name():
