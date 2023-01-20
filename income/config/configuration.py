@@ -27,7 +27,7 @@ class Configuration:
             dataset_download_url = data_ingestion_info[DATA_INGESTION_DOWNLOAD_URL_KEY]
             download_data_dir = os.path.join(data_ingestion_artifact_dir, data_ingestion_info[DATA_INGESTION_DOWNLOAD_DIR_KEY])
             raw_data_dir = os.path.join(data_ingestion_artifact_dir, data_ingestion_info[DATA_INGESTION_RAW_DATA_DIR_KEY])
-            raw_data_file=os.path.join(data_ingestion_artifact_dir,raw_data_dir,data_ingestion_info[DATA_INGESTION_RAW_DATA_FILE])
+            #raw_data_file=os.path.join(data_ingestion_artifact_dir,raw_data_dir,data_ingestion_info[DATA_INGESTION_RAW_DATA_FILE])
             ingested_data_dir = os.path.join(data_ingestion_artifact_dir, data_ingestion_info[DATA_INGESTION_INGESTED_DIR_KEY])
             ingested_train_dir = os.path.join(ingested_data_dir, data_ingestion_info[DATA_INGESTION_INGESTED_TRAIN_DIR_KEY])
             ingested_test_dir = os.path.join(ingested_data_dir, data_ingestion_info[DATA_INGESTION_INGESTED_TEST_DIR_KEY])
@@ -38,7 +38,8 @@ class Configuration:
                                                         ingested_dir=ingested_data_dir,
                                                         ingested_train_dir=ingested_train_dir,
                                                         ingested_test_dir=ingested_test_dir,
-                                                        raw_data_file=raw_data_file)
+                                                        #raw_data_file=raw_data_file
+                                                        )
 
             logging.info(f'Data Ingestion config: {data_ingestion_config}')
             return data_ingestion_config
