@@ -5,7 +5,10 @@ __pycache__/
 
 myvenv
 
+artifact
+
 adult.csv
+income_logs
 
 Project/Income/Scripts
 Project/Income/pyvenv.cfg
