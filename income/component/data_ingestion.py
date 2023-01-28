@@ -8,8 +8,8 @@ import numpy as np
 from income.constant import *
 import urllib.request 
 from imblearn.over_sampling import RandomOverSampler
-from sklearn.model_selection import train_test_split
 from income.config.configuration import Configuration  
+from sklearn.model_selection import StratifiedShuffleSplit
 
 
 class DataIngestion:
@@ -54,9 +54,10 @@ class DataIngestion:
                                                                     'capital-loss','hours-per-week','native-country','income'])
 
             logging.info('Splitting data into Train and test')
-            X_sampled = None 
-            y_sampled = None 
-
+            strat_train_set = None
+            strat_test_set = None
+            
+            '''(Data Transformation)
             replace_special = ['workclass', 'occupation','native-country']
             for i in replace_special:
                 income_dataframe[i] = income_dataframe[i].replace(' ?',np.nan)
@@ -70,26 +71,35 @@ class DataIngestion:
 
             categorical_columns = [col for col in income_dataframe.columns if income_dataframe[col].dtypes == 'object']
             income_dataframe = pd.get_dummies(income_dataframe, categorical_columns, drop_first = True)
-
-            X = income_dataframe.drop('income', axis = 1)
-            y = income_dataframe['income']
+            
 
             sampler = RandomOverSampler(random_state = 23)
             sampler.fit(X,y)
             X_sampled, y_sampled = sampler.fit_resample(X,y)
+            '''
+
+            X = income_dataframe.drop('income', axis = 1)
+            y = income_dataframe['income']
+
+            split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+
+            for train_index,test_index in split.split(X, y):
+                strat_train_set = income_dataframe.loc[train_index]
+                strat_test_set = income_dataframe.loc[test_index]
+
 
             train_file_path = os.path.join(self.data_ingestion_config.ingested_train_dir, file_name)
             test_file_path = os.path.join(self.data_ingestion_config.ingested_test_dir, file_name)
 
-            if X_sampled is not None:
+            if strat_train_set is not None:
                 os.makedirs(self.data_ingestion_config.ingested_train_dir, exist_ok = True)
                 logging.info(f"Exporting train datset to path: [{train_file_path}]")
-                X_sampled.to_csv(train_file_path, index = False)
+                strat_train_set.to_csv(train_file_path, index = False)
 
-            if y_sampled is not None:
+            if strat_test_set is not None:
                 os.makedirs(self.data_ingestion_config.ingested_test_dir, exist_ok = True)
                 logging.info(f"Exporting test datset to path: [{test_file_path}]")
-                y_sampled.to_csv(test_file_path, index = False)
+                strat_test_set.to_csv(test_file_path, index = False)
 
 
             data_ingestion_artifact = DataIngestionArtifact(train_file_path=train_file_path,
