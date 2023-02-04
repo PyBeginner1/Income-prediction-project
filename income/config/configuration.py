@@ -105,6 +105,7 @@ class Configuration:
                                                 data_transformation_config_info[DATA_TRANSFORMATION_DIR_NAME_KEY],
                                                 data_transformation_config_info[DATA_TRANSFORMATION_TEST_DIR_KEY])
             
+            ##
             preprocessed_object_file_path = os.path.join(data_transformation_artifact_dir, 
                                                          data_transformation_config_info[DATA_TRANSFORMATION_PREPROCESSING_DIR_KEY],
                                                          data_transformation_config_info[DATA_TRANSFORMATION_PREPROCESSED_FILE_NAME_KEY])
