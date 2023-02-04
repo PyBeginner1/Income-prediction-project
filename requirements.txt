@@ -6,3 +6,4 @@ PyYAML
 dill
 sklearn
 evidently
+matplotlib
