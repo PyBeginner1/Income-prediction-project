@@ -2,13 +2,14 @@ from income.config.configuration import Configuration
 from income.logger import logging
 from income.exception import IncomeException
 
-from income.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact, ModelTrainerArtifact
+from income.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact, ModelTrainerArtifact, ModelEvaluationArtifact
 from income.entity.config_entity import DataIngestionConfig
 
 from income.component.data_ingestion import DataIngestion
 from income.component.data_validation import DataValidation
 from income.component.data_transformation import DataTransformation
 from income.component.model_trainer import ModelTrainer
+from income.component.model_evaluation import ModelEvaluation
 
 import sys
 
@@ -60,6 +61,20 @@ class Pipeline:
             raise IncomeException(e,sys) from e 
         
 
+    def start_model_evaluation(self, data_ingestion_artifact: DataIngestionArtifact,
+                               data_validation_artifact: DataValidationArtifact,
+                               model_trainer_artifact: ModelTrainerArtifact) -> ModelEvaluationArtifact:
+        try:
+            model_eval = ModelEvaluation(
+                model_evaluation_config=self.config.get_model_evaluation_config(),
+                data_ingestion_artifact=data_ingestion_artifact,
+                data_validation_artifact=data_validation_artifact,
+                model_trainer_artifact=model_trainer_artifact)
+            return model_eval.initiate_model_evaluation()
+        except Exception as e:
+            raise IncomeException(e, sys) from e
+        
+
     def run_pipeline(self):
         try:
             logging.info('Initiating Pipeline')
@@ -69,5 +84,11 @@ class Pipeline:
                 data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact
             )
             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+
+            model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact=data_ingestion_artifact,
+                                                                    data_validation_artifact=data_validation_artifact,
+                                                                    model_trainer_artifact=model_trainer_artifact)
+
+            
         except Exception as e:
             raise IncomeException(e,sys) from e

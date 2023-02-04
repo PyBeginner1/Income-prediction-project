@@ -1,6 +1,6 @@
 from income.exception import IncomeException
 from income.logger import logging
-from income.entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig, DataTransformationConfig, ModelTrainerConfig
+from income.entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig, DataTransformationConfig, ModelTrainerConfig, ModelEvaluationConfig
 from income.constant import *
 import sys
 from income.util.util import read_yaml_file
@@ -117,8 +117,7 @@ class Configuration:
             
             logging.info(f'Data Transforamtion Config: {data_transformation_config}')
             
-            return data_transformation_config
-
+            return data_transformation_config         
         except Exception as e:
             raise IncomeException(e,sys) from e
         
@@ -152,6 +151,22 @@ class Configuration:
             raise IncomeException(e,sys) from e
         
 
+    def get_model_evaluation_config(self) ->ModelEvaluationConfig:
+        try:
+            model_evaluation_config = self.config_info[MODEL_EVALUATION_CONFIG_KEY]
+            artifact_dir = os.path.join(self.training_pipeline_config.artifact_dir,
+                                        MODEL_EVALUATION_ARTIFACT_DIR, )
+
+            model_evaluation_file_path = os.path.join(artifact_dir,
+                                                    model_evaluation_config[MODEL_EVALUATION_FILE_NAME_KEY])
+            response = ModelEvaluationConfig(model_evaluation_file_path=model_evaluation_file_path,
+                                            time_stamp=self.time_stamp)
+            
+            
+            logging.info(f"Model Evaluation Config: {response}.")
+            return response
+        except Exception as e:
+            raise IncomeException(e,sys) from e 
 
     
     def get_training_pipeline_config(self) -> TrainingPipelineConfig:
