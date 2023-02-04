@@ -1,6 +1,6 @@
 from income.exception import IncomeException
 from income.logger import logging
-from income.entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig, DataTransformationConfig
+from income.entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig, DataTransformationConfig, ModelTrainerConfig
 from income.constant import *
 import sys
 from income.util.util import read_yaml_file
@@ -20,6 +20,7 @@ class Configuration:
     
     def get_data_ingestion_config(self) -> DataIngestionConfig:
         try:
+            logging.info('Starting Configuration for Data Ingestion')
             artifact_dir = self.training_pipeline_config.artifact_dir
             data_ingestion_artifact_dir = os.path.join(artifact_dir, DATA_INGESTION_ARTIFACT_DIR, self.time_stamp)
             data_ingestion_info = self.config_info[DATA_INGESTION_CONFIG_KEY]
@@ -51,6 +52,7 @@ class Configuration:
 
     def get_data_validation_config(self) -> DataValidationConfig:
         try:
+            logging.info('Starting Configuration for Data Validation')
             artifact_dir = self.training_pipeline_config.artifact_dir
             data_validation_artifact_dir = os.path.join(artifact_dir,DATA_VALIDATION_ARTIFACT_DIR_NAME, 
                                                         self.time_stamp)          
@@ -88,6 +90,7 @@ class Configuration:
 
     def get_data_transformation_config(self) -> DataTransformationConfig:
         try:
+            logging.info('Starting Configuration for Data Transformation')
             artifact_dir = self.training_pipeline_config.artifact_dir
 
             data_transformation_artifact_dir  = os.path.join(artifact_dir, DATA_TRANSFORMATION_ARTIFACT_DIR,
@@ -114,6 +117,35 @@ class Configuration:
             logging.info(f'Data Transforamtion Config: {data_transformation_config}')
             
             return data_transformation_config
+
+        except Exception as e:
+            raise IncomeException(e,sys) from e
+        
+
+
+    def get_model_trainer_config(self) -> ModelTrainerConfig:
+        try:
+            logging.info('Starting Configuration for Model Trainer')
+            artifact_dir = self.training_pipeline_config.artifact_dir
+            model_trainer_artifact_dir = os.path.join(artifact_dir, MODEL_TRAINER_ARTIFACT_DIR, self.time_stamp)
+            model_trainer_config_info = self.config_info[MODEL_TRAINER_CONFIG_KEY]
+
+            trained_model_file_path = os.path.join(model_trainer_artifact_dir,
+                                                   model_trainer_config_info[MODEL_TRAINER_TRAINED_MODEL_DIR_KEY],
+                                                   model_trainer_config_info[MODEL_TRAINER_TRAINED_MODEL_FILE_NAME_KEY]) 
+
+            base_accuracy = model_trainer_config_info[MODEL_TRAINER_BASE_ACCURACY_KEY] 
+        
+            model_config_file_path = os.path.join(model_trainer_config_info[MODEL_TRAINER_MODEL_CONFIG_DIR_KEY], 
+                                                  model_trainer_config_info[MODEL_TRAINER_MODEL_CONFIG_FILE_NAME_KEY]) 
+            
+            model_trainer_config = ModelTrainerConfig(trained_model_file_path=trained_model_file_path,
+                                                      base_accuracy=base_accuracy,
+                                                      model_config_file_path=model_config_file_path)
+            
+            logging.info(f'Model Trainer Config: {model_trainer_config}')
+            
+            return model_trainer_config
 
         except Exception as e:
             raise IncomeException(e,sys) from e

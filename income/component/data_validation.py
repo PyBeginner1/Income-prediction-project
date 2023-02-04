@@ -132,5 +132,9 @@ class DataValidation:
             return data_validation_artifact
         except Exception as e:
             raise IncomeException(e,sys) from e 
+        
+
+    def __del__(self):
+        logging.info(f"{'>>'*20}Data Validation log completed.{'<<'*20} \n\n")
     
     

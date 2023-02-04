@@ -117,6 +117,10 @@ class DataTransformation:
             input_feature_train_df = pd.get_dummies(input_feature_train_df, categorical_columns, drop_first = True)
             categorical_columns = [col for col in input_feature_test_df.columns if input_feature_test_df[col].dtypes == 'object']
             input_feature_test_df = pd.get_dummies(input_feature_test_df, categorical_columns, drop_first = True)
+
+            #Extra
+            target_feature_train_df = pd.get_dummies(target_feature_train_df, drop_first = True)
+            target_feature_test_df = pd.get_dummies(target_feature_test_df, drop_first = True)
          
 
             transformed_train_dir_path = self.data_transformation_config.transformed_train_dir
@@ -184,6 +188,9 @@ class DataTransformation:
 
             logging.info(f'Data Transformation Artifact: {data_transformation_artifact}')'''
 
-            #return data_transformation_artifact
+            return data_transformation_artifact
         except Exception as e:
             raise IncomeException(e,sys) from e 
+        
+    def __del__(self):
+        logging.info(f"{'>>'*20}Data Transformation log completed.{'<<'*20} \n\n")

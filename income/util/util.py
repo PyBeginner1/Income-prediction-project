@@ -51,7 +51,7 @@ def load_numpy_array_data(file_path: str)->np.array:
     """
     try:
         with open(file_path, 'rb') as file_obj:
-            return np.load(file_obj)
+            return np.load(file_obj,allow_pickle=True)
     except Exception as e:
         raise IncomeException(e, sys) from e
 
@@ -76,11 +76,19 @@ def load_object(file_path:str):
     """
     file_path: str
     """
-    try:
-        with open(file_path, "rb") as file_obj:
-            return dill.load(file_obj)
-    except Exception as e:
-        raise IncomeException(e,sys) from e
+    dir_path = os.path.dirname(file_path)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+    if os.path.exists(dir_path):
+        try:
+            with open(file_path, "rb") as file_obj:
+                return dill.load(file_obj)
+        except Exception as e:
+            raise IncomeException(e,sys) from e
+    else:
+        raise FileNotFoundError(f"{file_path} does not exist")
+
+
 
 
 
