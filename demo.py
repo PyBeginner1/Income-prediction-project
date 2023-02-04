@@ -5,4 +5,3 @@ from income.pipeline.pipeline import Pipeline
 a = Pipeline()
 
 a.run_pipeline()
-
